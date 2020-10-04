@@ -1,0 +1,54 @@
+%YAML 1.1
+---
+name: oci-image
+
+on:
+  push:
+    branches:
+      - '*'
+    paths-ignore:
+      - 'examples/**'
+      - '**.md'
+
+jobs:
+  build-sdk:
+    name: Build AROS M68K Cross Compiler SDK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Build Ubuntu Base Image
+        run: |
+          docker build \
+              --file base/Dockerfile \
+              --tag builder:local \
+              base
+
+      - name: Build Cross Compiler and SDK
+        run: |
+          docker build \
+            --file builder/Dockerfile \
+            --tag builder:local \
+            builder
+
+      - name: Build Devkit
+        run: |
+          docker build \
+            --file devkit/Dockerfile \
+            --tag docker.pkg.github.com/notcalle/amiga-m68k-xdk/devkit:latest \
+            devkit
+
+      - name: Login to GitHub Registry
+        uses: docker/login-action@v1
+        with:
+          password: ${{ secrets.OCI_REGISTRY_TOKEN }}
+          registry: docker.pkg.github.com
+          username: ${{ github.actor }}
+
+      - name: Push Devkit to GitHub Registry
+        run:
+          /usr/bin/docker push
+            docker.pkg.github.com/notcalle/amiga-m68k-xdk/devkit:latest
+...
