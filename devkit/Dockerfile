@@ -21,12 +21,12 @@ RUN mv build/bin . \
 FROM ubuntu
 
 RUN apt-get update > /dev/null \
+    && dpkg-divert --remove --local /usr/bin/man \
     && apt-get install -y  > /dev/null \
         git \
         make \
         tmux \
         man-db \
-    && dpkg-divert --remove --local --rename /usr/bin/man \
     && apt-get clean > /dev/null \
     && rm -rf /var/lib/apt/lists \
     && adduser \
