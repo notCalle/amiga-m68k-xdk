@@ -23,7 +23,6 @@ FROM ubuntu
 RUN apt-get update > /dev/null \
     && dpkg-divert --remove --local /usr/bin/man \
     && apt-get install -y  > /dev/null \
-        cmake \
         git \
         make \
         man-db \
