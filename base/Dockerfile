@@ -18,4 +18,4 @@ RUN apt-get update > /dev/null \
     && apt-get clean > /dev/null \
     && adduser \
         --home /aros aros --system \
-        --uid 10001 --gecos "AROS Amiga-m68k Cross Compiler & SDK" \
+        --uid 10001 --gecos "AROS Amiga-m68k Cross Compiler & SDK"
